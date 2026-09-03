@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta Regresiva del cumpleaños de mi príncipe🎂</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffd6e7, #d9e7ff);
+            text-align: center;
+        }
+
+        .contenedor {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #e75480;
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        #fecha {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .reloj {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tiempo {
+            background: #f8a8c4;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 100px;
+        }
+
+        .numero {
+            display: block;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .texto {
+            font-size: 14px;
+        }
+
+        #mensaje {
+            display: none;
+            font-size: 45px;
+            color: #e75480;
+            font-weight: bold;
+            animation: aparecer 1s infinite alternate;
+        }
+
+        .corazones {
+            font-size: 35px;
+            margin: 15px;
+        }
+
+        @keyframes aparecer {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(1.08);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <div id="contador">
+
+        <div class="corazones">Feliz cumpleaños a mi bebe🎂</div>
+
+        <h1>Cuenta regresiva</h1>
+
+        <div id="fecha">
+            Cargando fecha y hora de Guatemala...
+        </div>
+
+        <div class="reloj">
+
+            <div class="tiempo">
+                <span class="numero" id="dias">00</span>
+                <span class="texto">DÍAS</span>
+            </div>
+
+            <div class="tiempo">
+                <span class="numero" id="horas">00</span>
+                <span class="texto">HORAS</span>
+            </div>
+
+            <div class="tiempo">
+                <span class="numero" id="minutos">00</span>
+                <span class="texto">MINUTOS</span>
+            </div>
+
+            <div class="tiempo">
+                <span class="numero" id="segundos">00</span>
+                <span class="texto">SEGUNDOS</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="mensaje">
+        🎉 ¡FELIZ CUMPLEAÑOS MI AMOR! 🎂
+        <div class="corazones">
+            Te amo mucho mi niño lindo💗
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+function obtenerHoraGuatemala() {
+
+    const ahora = new Date();
+
+    const guatemala = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Guatemala",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+    }).formatToParts(ahora);
+
+    let datos = {};
+
+    guatemala.forEach(parte => {
+        datos[parte.type] = parte.value;
+    });
+
+    return new Date(
+        `${datos.year}-${datos.month}-${datos.day}T${datos.hour}:${datos.minute}:${datos.second}`
+    );
+}
+
+
+function actualizarCuentaRegresiva() {
+
+    const ahora = obtenerHoraGuatemala();
+
+    // 3 de septiembre a las 00:00
+    const cumpleaños = new Date(
+        ahora.getFullYear(),
+        8, // septiembre = 8
+        3,
+        0,
+        0,
+        0
+    );
+
+    const diferencia = cumpleaños - ahora;
+
+    // Si ya llegó el 3 de septiembre
+    if (diferencia <= 0) {
+
+        document.getElementById("contador").style.display = "none";
+        document.getElementById("mensaje").style.display = "block";
+
+        return;
+    }
+
+    const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+    const horas = Math.floor(
+        (diferencia / (1000 * 60 * 60)) % 24
+    );
+
+    const minutos = Math.floor(
+        (diferencia / (1000 * 60)) % 60
+    );
+
+    const segundos = Math.floor(
+        (diferencia / 1000) % 60
+    );
+
+    document.getElementById("dias").textContent =
+        String(dias).padStart(2, "0");
+
+    document.getElementById("horas").textContent =
+        String(horas).padStart(2, "0");
+
+    document.getElementById("minutos").textContent =
+        String(minutos).padStart(2, "0");
+
+    document.getElementById("segundos").textContent =
+        String(segundos).padStart(2, "0");
+
+
+    // Mostrar fecha y hora actual de Guatemala
+    document.getElementById("fecha").textContent =
+        "Hora de Guatemala: " +
+        ahora.toLocaleString("es-GT");
+}
+
+
+// Actualizar cada segundo
+setInterval(actualizarCuentaRegresiva, 1000);
+
+// Ejecutar inmediatamente
+actualizarCuentaRegresiva();
+
+</script>
+
+</body>
+</html>
+
